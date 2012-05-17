@@ -1,13 +1,7 @@
 #!/usr/bin/perl -Tw
 #
-# t/basic.t -- Test suite for the Term::ANSIColor Perl module.
+# t/config.t -- testing the optional config file functionality
 #
-# Copyright 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2009, 2010
-#     Russ Allbery <rra@stanford.edu>
-#
-# This program is free software; you may redistribute it and/or modify it
-# under the same terms as Perl itself.
-
 use strict;
 use Test::More tests => 19;
 

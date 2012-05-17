@@ -91,26 +91,7 @@ for (reverse sort keys %ATTRIBUTES) {
 }
 
 # If there is a custom color config file defined, read it now
-if (my $cfgfile = $ENV{TERM_ANSICOLOR_CONFIG}) {
-    if (open(CFG, "< $cfgfile")) {
-        while (<CFG>) {
-            s/#.*$//;           # strip comments
-            next unless /\w/;   # skip blank lines
-            if (/^\s*(\w+)\s*=\s*(\w+)\s*$/) {
-                $ATTRIBUTES{$1} = $ATTRIBUTES{$2};
-                $ATTRIBUTES_R{$ATTRIBUTES{$1}} = $1; # not sure if we want this
-            }
-            else {
-                warn "Ignoring malformed config entry at $cfgfile($.):\n\t$_";
-            }
-        }
-        close(CFG);
-    }
-    else {
-        warn "Opening $cfgfile: $!\n";
-    }
-}
-
+_read_config($ENV{TERM_ANSICOLOR_CONFIG});
 
 ##############################################################################
 # Implementation (constant form)
@@ -292,6 +273,33 @@ sub colorvalid {
         }
     }
     return 1;
+}
+
+# Read a custom color configfile, extending the %ATTRIBUTES table, and
+# overriding entries in %ATTRIBUTES_R.
+sub _read_config {
+    my $cfgfile = shift;
+    if (!$cfgfile) {
+        return;
+    }
+
+    if (!open(CFG, "< $cfgfile")) {
+        warn "Opening $cfgfile: $!\n";
+        return;
+    }
+
+    while (<CFG>) {
+        s/#.*$//;           # strip comments
+        next unless /\w/;   # skip blank lines
+        if (/^\s*(\w+)\s*=\s*(\w+)\s*$/) {
+            $ATTRIBUTES{$1} = $ATTRIBUTES{$2};
+            $ATTRIBUTES_R{$ATTRIBUTES{$1}} = $1; # not sure if we want this
+        }
+        else {
+            warn "Ignoring malformed config entry at $cfgfile($.):\n\t$_";
+        }
+    }
+    close(CFG);
 }
 
 ##############################################################################
