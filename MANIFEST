@@ -3,7 +3,11 @@ ChangeLog
 Makefile.PL
 MANIFEST
 README
+examples/remap.rc
+examples/solarized.rc
 t/basic.t
+t/config.rc
+t/config.t
 t/eval.t
 t/pod-spelling.t
 t/pod.t
