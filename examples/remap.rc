@@ -1,0 +1,5 @@
+# Term::ANSIColor mapping file to switch red and green
+
+temp = green
+green = red
+red = temp
