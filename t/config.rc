@@ -1,0 +1,14 @@
+# Sample config file for use with config.t
+
+custom_black = black
+custom_red= red
+custom_blue =blue
+custom_green=green
+
+ custom_on_black = on_black
+ custom_on_red= on_red  # test comment should be stripped
+ custom_on_blue =on_blue
+ custom_on_green=on_green
+
+# custom_missing1 = white
+ # custom_missing2 = yellow

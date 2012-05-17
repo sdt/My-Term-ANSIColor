@@ -91,19 +91,24 @@ for (reverse sort keys %ATTRIBUTES) {
 }
 
 # If there is a custom color config file defined, read it now
-if (-e (my $cfgfile = $ENV{TERM_ANSICOLOR_CONFIG})) {
-    open(CFG, "< $cfgfile") or warn "Opening $cfgfile: $!\n";
-    while (<CFG>) {
-        s/#.*$//;           # strip comments
-        next unless /\w/;   # skip blank lines
-        if (/^\s*(\w+)\s*=\s*(\w+)\s*$/) {
-            $ATTRIBUTES{$1} = $ATTRIBUTES{$2};
+if (my $cfgfile = $ENV{TERM_ANSICOLOR_CONFIG}) {
+    if (open(CFG, "< $cfgfile")) {
+        while (<CFG>) {
+            s/#.*$//;           # strip comments
+            next unless /\w/;   # skip blank lines
+            if (/^\s*(\w+)\s*=\s*(\w+)\s*$/) {
+                $ATTRIBUTES{$1} = $ATTRIBUTES{$2};
+                $ATTRIBUTES_R{$ATTRIBUTES{$1}} = $1; # not sure if we want this
+            }
+            else {
+                warn "Ignoring malformed config entry at $cfgfile($.):\n\t$_";
+            }
         }
-        else {
-            warn "Ignoring malformed config entry at $cfgfile($.):\n\t$_";
-        }
+        close(CFG);
     }
-    close(CFG);
+    else {
+        warn "Opening $cfgfile: $!\n";
+    }
 }
 
 
