@@ -90,6 +90,10 @@ for (reverse sort keys %ATTRIBUTES) {
     $ATTRIBUTES_R{$ATTRIBUTES{$_}} = $_;
 }
 
+if (exists($ENV{TERM_ANSICOLOR_CUSTOM_COLORS})) {
+    _add_custom_colors_from_string($ENV{TERM_ANSICOLOR_CUSTOM_COLORS});
+}
+
 ##############################################################################
 # Implementation (constant form)
 ##############################################################################
@@ -270,6 +274,29 @@ sub colorvalid {
         }
     }
     return 1;
+}
+
+# Parse a comma-separated line of custom color definitions.
+# Each definitions is of the form:
+#   name=name-or-number(;name-or-number)*
+# The value is a semicolon-separated list of attribute numbers, or existing
+# attribute names.
+sub _add_custom_colors {
+    my ($str) = @_;
+    my $attr = '';
+    for my $defn (split(/\s*,\s*/, $str)) {
+        my ($name, $values) = split(/\s*=\s*/, $defn, 2);
+        for my $value (split(/\s*;\s*/, $values)) {
+            if (exists $ATTRIBUTES{$value}) {
+                $value = $ATTRIBUTES{$value};
+            }
+            $attr .= $value . ';';
+        }
+        if ($attr ne '') {
+            chop $attr;
+        }
+        $ATTRIBUTES{$name} = $attr;
+    }
 }
 
 ##############################################################################
