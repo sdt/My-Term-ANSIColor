@@ -90,6 +90,9 @@ for (reverse sort keys %ATTRIBUTES) {
     $ATTRIBUTES_R{$ATTRIBUTES{$_}} = $_;
 }
 
+# If there is a custom color config file defined, read it now
+_read_config($ENV{TERM_ANSICOLOR_CONFIG});
+
 ##############################################################################
 # Implementation (constant form)
 ##############################################################################
@@ -270,6 +273,40 @@ sub colorvalid {
         }
     }
     return 1;
+}
+
+# Read a custom color configfile, extending the %ATTRIBUTES table.
+sub _read_config {
+    my $cfgfile = shift;
+    if (!$cfgfile) {
+        return;
+    }
+
+    if (!open(CFG, "< $cfgfile")) {
+        warn "Opening $cfgfile: $!\n";
+        return;
+    }
+
+    while (<CFG>) {
+        s/#.*$//;           # strip comments
+        next unless /\w/;   # skip blank lines
+        if (/^\s*(\w+)\s*=\s*(\w+)\s*$/) {
+            if (exists $ATTRIBUTES{$2}) {
+                $ATTRIBUTES{$1} = $ATTRIBUTES{$2};
+
+                # The reverse mapping could also be customized, but this may
+                # break client code relying on specific names from uncolor().
+                # $ATTRIBUTES_R{$ATTRIBUTES{$1}} = $1;
+            }
+            else {
+                warn "Ignoring unknown color $2 at $cfgfile($.)\n";
+            }
+        }
+        else {
+            warn "Ignoring malformed config entry at $cfgfile($.):\n\t$_";
+        }
+    }
+    close(CFG);
 }
 
 ##############################################################################
