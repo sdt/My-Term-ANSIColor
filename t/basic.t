@@ -13,6 +13,7 @@ use Test::More tests => 54;
 
 BEGIN {
     delete $ENV{ANSI_COLORS_DISABLED};
+    delete $ENV{TERM_ANSICOLOR_CONFIG};
     use_ok ('Term::ANSIColor',
             qw/:pushpop color colored uncolor colorstrip colorvalid/);
 }
