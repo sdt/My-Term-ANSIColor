@@ -90,6 +90,11 @@ for (reverse sort keys %ATTRIBUTES) {
     $ATTRIBUTES_R{$ATTRIBUTES{$_}} = $_;
 }
 
+# Add custom color names if required.
+if (exists($ENV{TERM_ANSICOLOR_CUSTOM_COLORS})) {
+    _add_custom_colors($ENV{TERM_ANSICOLOR_CUSTOM_COLORS});
+}
+
 ##############################################################################
 # Implementation (constant form)
 ##############################################################################
@@ -270,6 +275,29 @@ sub colorvalid {
         }
     }
     return 1;
+}
+
+# Parse a comma-separated line of custom color definitions, each of the
+# form: newname=oldname
+sub _add_custom_colors {
+    my ($str) = @_;
+    $str =~ s/\s+//g;   # trim out all whitespace
+    for my $defn (split(/,/, $str)) {
+        my ($new, $old) = split(/=/, $defn, 2);
+        if (!$new || !$old) {
+            warn "Bad color mapping \"$defn\"";
+        }
+        elsif (! exists $ATTRIBUTES{$old}) {
+            warn "Unknown color mapping \"$old\"";
+        }
+        else {
+            $ATTRIBUTES{$new} = $ATTRIBUTES{$old};
+
+            # Could also do the the reverse mapping, but this may break
+            # client code which expects specific strings to be returned
+            # from uncolor.
+        }
+    }
 }
 
 ##############################################################################
