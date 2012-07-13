@@ -661,6 +661,33 @@ platforms that don't support ANSI escape sequences.
 For it to have its proper effect, this environment variable must be set
 before any color constants are used in the program.
 
+=item TERM_ANSICOLOR_CUSTOM_COLORS
+
+This environment variable allows the user to specify custom color names
+that will be understood by color(), colored() and colorvalid(). The custom
+color names are simply aliases for existing color names.
+
+The format is:
+
+    TERM_ANSICOLOR_CUSTOM_COLORS="newcolor1=oldcolor1,newcolor2=oldcolor2"
+
+Whitespace is ignored.
+
+For example the L<Solarized|http://ethanschoonover.com/solarized> colors can
+be mapped with:
+
+    TERM_ANSICOLOR_CUSTOM_COLORS="\
+        base00=bright_yellow, on_base00=on_bright_yellow,\
+        base01=bright_green,  on_base01=on_bright_green, \
+        base02=black,         on_base02=on_black,        \
+        base03=bright_black,  on_base03=on_bright_black, \
+        base0=bright_blue,    on_base0=on_bright_blue,   \
+        base1=bright_cyan,    on_base1=on_bright_cyan,   \
+        base2=white,          on_base2=on_white,         \
+        base3=bright_white,   on_base3=on_bright_white,  \
+        orange=bright_red,    on_orange=on_bright_red,   \
+        violet=bright_magenta,on_violet=on_bright_magenta"
+
 =back
 
 =head1 RESTRICTIONS
