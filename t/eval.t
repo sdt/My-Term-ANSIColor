@@ -12,6 +12,7 @@ use Test::More tests => 5;
 
 BEGIN {
     delete $ENV{ANSI_COLORS_DISABLED};
+    delete $ENV{TERM_ANSICOLOR_CUSTOM_COLORS};
     use_ok ('Term::ANSIColor', qw/:constants/);
 }
 
